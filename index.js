@@ -150,9 +150,65 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         api.sendMessage("🔓 Group name unlocked.", threadID);
       }
 
-      else if (cmd === "/uid") {
-        api.sendMessage(`🆔 Group ID: ${threadID}`, threadID);
-      }
+        else if (cmd === "/uid") {
+          if (event.messageReply) {
+            return api.sendMessage(`🆔 Reply UID: ${event.messageReply.senderID}`, threadID);
+          } else if (event.mentions && Object.keys(event.mentions).length > 0) {
+            const target = Object.keys(event.mentions)[0];
+            return api.sendMessage(`🆔 Mention UID: ${target}`, threadID);
+          } else {
+            return api.sendMessage(`🆔 Your UID: ${senderID}`, threadID);
+          }
+        }
+
+        else if (cmd === "/locktheme") {
+          if (!input) return api.sendMessage("❌ Color code do!", threadID);
+          await api.changeThreadColor(input, threadID);
+          lockedThemes[threadID] = input;
+          api.sendMessage("🎨 Theme locked!", threadID);
+        }
+
+else if (cmd === "/unlocktheme") {
+          delete lockedThemes[threadID];
+          api.sendMessage("🎨 Theme unlocked!", threadID);
+        }
+
+        else if (cmd === "/lockemoji") {
+          if (!input) return api.sendMessage("❌ Emoji do!", threadID);
+          lockedEmojis[threadID] = input;
+          try {
+            await api.changeThreadEmoji(input, threadID);
+            api.sendMessage(`😀 Emoji locked → ${input}`, threadID);
+          } catch {
+            api.sendMessage("⚠️ Emoji lock fail!", threadID);
+          }
+        }
+
+else if (cmd === "/unlockemoji") {
+          delete lockedEmojis[threadID];
+          api.sendMessage("🔓 Emoji unlocked!", threadID);
+        }
+
+        else if (cmd === "/lockdp") {
+          try {
+            const info = await api.getThreadInfo(threadID);
+            const dpUrl = info.imageSrc;
+            if (!dpUrl) return api.sendMessage("❌ Is group me koi DP nahi hai!", threadID);
+
+            const filePath = `locked_dp_${threadID}.jpg`;
+            request(dpUrl).pipe(fs.createWriteStream(filePath)).on("close", () => {
+              lockedDPs[threadID] = filePath;
+              api.sendMessage("🖼 Current group DP ab lock ho gayi hai 🔒", threadID);
+            });
+          } catch (e) {
+            api.sendMessage("⚠️ DP lock error!", threadID);
+          }
+        }
+
+else if (cmd === "/unlockdp") {
+          delete lockedDPs[threadID];
+          api.sendMessage("🔓 DP lock remove ho gaya ✔️", threadID);
+        }
 
       else if (cmd === "/exit") {
         try {
@@ -279,9 +335,18 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
 
       else if (cmd === "/help") {
         const helpText = `
-📌 Available Commands:
+📌 Legend Akku Commands:
 /allname <name> – Change all nicknames
 /groupname <name> – Change group name
+/lockdp → Current group DP lock
+/unlockdp → Group DP unlock
+/unlocknick @mention → Nick lock remove
+/uid → Reply/Mention/User UID show
+nickname → Specific nickname lock
+/locktheme [color] → Theme lock
+/unlocktheme → Theme unlock
+/lockemoji 😀 → Emoji lock
+/unlockemoji → Emoji unlock
 /lockgroupname <name> – Lock group name
 /unlockgroupname – Unlock group name
 /uid – Show group ID
@@ -295,7 +360,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
 /cleartarget – Target hata dega
 /sticker<seconds> – Sticker.txt se sticker spam (e.g., /sticker20)
 /stopsticker – Stop sticker loop
-/help – Show this help message🙂😁`;
+/help – Show To tume Akku ki help ki jarurat pad gyi🙂😁`;
         api.sendMessage(helpText.trim(), threadID);
       }
 
