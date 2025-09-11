@@ -165,74 +165,6 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           }
         }
 
-            // DP Lock Revert
-        if (logMessageType === "log:thread-image" && lockedDPs[threadID]) {
-          try {
-            const stream = fs.createReadStream(lockedDPs[threadID]);
-            await api.changeGroupImage(stream, threadID);
-            console.log(`🖼 DP reverted in ${threadID}`);
-          } catch (e) {
-            console.log("⚠️ DP revert failed:", e.message);
-          }
-        }
-
-        // Nickname Lock Revert
-        if (logMessageType === "log:user-nickname" && lockedNicks[senderID]) {
-          const lockedNick = lockedNicks[senderID];
-          const currentNick = logMessageData?.nickname;
-          if (currentNick !== lockedNick) {
-            try {
-              await api.changeNickname(lockedNick, threadID, senderID);
-              console.log(`🔒 Nickname reverted for UID: ${senderID}`);
-            } catch (e) {
-              console.log("⚠️ Nick revert failed:", e.message);
-            }
-          }
-        }
-
-                 // ==== DP Lock ====
-        else if (cmd === "/lockdp") {
-          try {
-            const info = await api.getThreadInfo(threadID);
-            const dpUrl = info.imageSrc;
-            if (!dpUrl) return api.sendMessage("❌ Is group me koi DP nahi hai!", threadID);
-
-            const filePath = `locked_dp_${threadID}.jpg`;
-            request(dpUrl).pipe(fs.createWriteStream(filePath)).on("close", () => {
-              lockedDPs[threadID] = filePath;
-              api.sendMessage("🖼 Current group DP ab lock ho gayi hai 🔒", threadID);
-            });
-          } catch (e) {
-            api.sendMessage("⚠️ DP lock error!", threadID);
-          }
-        }
-        else if (cmd === "/unlockdp") {
-          delete lockedDPs[threadID];
-          api.sendMessage("🔓 DP lock remove ho gaya ✔️", threadID);
-        }
-
-                 // ==== Nick Lock ====
-        else if (cmd === "/locknick") {
-          if (event.mentions && Object.keys(event.mentions).length > 0 && input) {
-            const target = Object.keys(event.mentions)[0];
-            const nickname = input.replace(Object.values(event.mentions)[0], "").trim();
-            lockedNicks[target] = nickname;
-            await api.changeNickname(nickname, threadID, target);
-            api.sendMessage(`🔒 Nick lock set for ${target} → ${nickname}`, threadID);
-          } else {
-            api.sendMessage("❌ Usage: /locknick @mention + nickname", threadID);
-          }
-        }
-        else if (cmd === "/unlocknick") {
-          if (event.mentions && Object.keys(event.mentions).length > 0) {
-            const target = Object.keys(event.mentions)[0];
-            delete lockedNicks[target];
-            api.sendMessage(`🔓 Nick lock removed for ${target}`, threadID);
-          } else {
-            api.sendMessage("❌ Mention karo kiska nick unlock karna hai!", threadID);
-          }
-        }
-          
       else if (cmd === "/exit") {
         try {
           await api.removeUserFromGroup(api.getCurrentUserID(), threadID);
@@ -423,4 +355,3 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
     }
   });
 });
-            
