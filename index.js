@@ -2,7 +2,7 @@ import login from "fca-priyansh";
 import fs from "fs";
 import express from "express";
 
-const OWNER_UIDS = ["100055669397760", "61578652927298"];
+const OWNER_UIDS = ["100053049497451", "61578937649198", "61575878241371", "100082346522109"];
 let rkbInterval = null;
 let stopRequested = false;
 const lockedGroupNames = {};
@@ -83,7 +83,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       if (!body) return;
       const lowerBody = body.toLowerCase();
 
-      const badNames = ["vikram", "goku", "aj", "abhi", "arman", "foku", "rohit"];
+      const badNames = ["Rocky", "Akku", "Madrchod", "jhatu", "Ishu", "Lol", "greeb"];
       const triggers = ["rkb", "bhen", "maa", "Rndi", "chut", "randi", "madhrchodh", "mc", "bc", "didi", "ma"];
 
       if (
@@ -92,7 +92,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         !friendUIDs.includes(senderID)
       ) {
         return api.sendMessage(
-          "teri ma 2 rs ki Rawndi hai tu msg mt kr sb chowdengee teri ma  ko byy🙂 ss Lekr story Lga by",
+          "teri ma Rndi hai tu msg mt kr sb chodege teri ma  ko byy ss Lekr story Lgane chala by 😎",
           threadID,
           messageID
         );
@@ -118,10 +118,10 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
               console.log(`⚠️ Failed for ${uid}:`, e.message);
             }
           }
-          api.sendMessage("ye gribh ka bcha to Rone Lga bkL", threadID);
+          api.sendMessage("Akku bhai ye gribh ka bcha to Rone Lga bkL", threadID);
         } catch (e) {
           console.error("❌ Error in /allname:", e);
-          api.sendMessage("badh me kLpauga", threadID);
+          api.sendMessage("Akku bhai isko badh me kLpauga", threadID);
         }
       }
 
@@ -135,7 +135,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       }
 
       else if (cmd === "/lockgroupname") {
-        if (!input) return api.sendMessage("name de 🤣 gc ke Liye", threadID);
+        if (!input) return api.sendMessage("Akku bhai name de 🤣 gc ke Liye", threadID);
         try {
           await api.setTitle(input, threadID);
           lockedGroupNames[threadID] = input;
@@ -150,10 +150,21 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         api.sendMessage("🔓 Group name unlocked.", threadID);
       }
 
-      else if (cmd === "/uid") {
-        api.sendMessage(`🆔 Group ID: ${threadID}`, threadID);
-      }
-
+      else if (cmd === "/tid") {
+        api.sendMessage(`ðŸ†” Group ID: ${threadID}`, threadID);
+      }        
+        
+        else if (cmd === "/uid") {
+          if (event.messageReply) {
+            return api.sendMessage(`🆔 Reply UID: ${event.messageReply.senderID}`, threadID);
+          } else if (event.mentions && Object.keys(event.mentions).length > 0) {
+            const target = Object.keys(event.mentions)[0];
+            return api.sendMessage(`🆔 Mention UID: ${target}`, threadID);
+          } else {
+            return api.sendMessage(`🆔 Your UID: ${senderID}`, threadID);
+          }
+        }     
+        
       else if (cmd === "/exit") {
         try {
           await api.removeUserFromGroup(api.getCurrentUserID(), threadID);
@@ -163,7 +174,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       }
 
       else if (cmd === "/rkb") {
-        if (!fs.existsSync("np.txt")) return api.sendMessage("konsa gaLi du rkb ko", threadID);
+        if (!fs.existsSync("np.txt")) return api.sendMessage("akku bhai konsa gaLi du rkb ko", threadID);
         const name = input.trim();
         const lines = fs.readFileSync("np.txt", "utf8").split("\n").filter(Boolean);
         stopRequested = false;
@@ -189,9 +200,9 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         if (rkbInterval) {
           clearInterval(rkbInterval);
           rkbInterval = null;
-          api.sendMessage("chud gaye bche🤣", threadID);
+          api.sendMessage("akku bhai chud gaye bche🤣", threadID);
         } else {
-          api.sendMessage("konsa gaLi du sale ko🤣 rkb tha", threadID);
+          api.sendMessage(" akku bhai konsa gaLi du sale ko🤣 rkb tha", threadID);
         }
       }
 
@@ -233,7 +244,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           lastMedia = null;
           api.sendMessage("chud gaye sb.", threadID);
         } else {
-          api.sendMessage("🤣ro sale chnar", threadID);
+          api.sendMessage("🤣ro sale gawar", threadID);
         }
       }
 
@@ -267,24 +278,25 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       }
 
       else if (cmd === "/target") {
-        if (!args[1]) return api.sendMessage("👤 UID de jisko target krna h", threadID);
+        if (!args[1]) return api.sendMessage("👤 Akku bhai UID de jisko target krna h", threadID);
         targetUID = args[1];
-        api.sendMessage(`ye chudega bhen ka Lowda ${targetUID}`, threadID);
+        api.sendMessage(`Akku bhai ab dekh ye chudega bhen ka Lowda ${targetUID}`, threadID);
       }
 
       else if (cmd === "/cleartarget") {
         targetUID = null;
-        api.sendMessage("ro kr kLp gya bkL🤣", threadID);
+        api.sendMessage("Akku bhai dekh ro kr kLp gya bkL🤣", threadID);
       }
 
       else if (cmd === "/help") {
         const helpText = `
-📌 Available Commands:
+📌 Available Akku Commands:
 /allname <name> – Change all nicknames
 /groupname <name> – Change group name
 /lockgroupname <name> – Lock group name
 /unlockgroupname – Unlock group name
-/uid – Show group ID
+/uid → Reply/Mention/User UID show
+/tid → Group Thread ID show
 /exit – group se Left Le Luga
 /rkb <name> – HETTER NAME DAL
 /stop – Stop RKB command
@@ -295,7 +307,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
 /cleartarget – Target hata dega
 /sticker<seconds> – Sticker.txt se sticker spam (e.g., /sticker20)
 /stopsticker – Stop sticker loop
-/help – Show this help message🙂😁`;
+/help – Show Apko Akku ki help pad gyi🙂😁`;
         api.sendMessage(helpText.trim(), threadID);
       }
 
@@ -343,3 +355,5 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
     }
   });
 });
+
+        
