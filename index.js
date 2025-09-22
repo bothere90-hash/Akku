@@ -2,7 +2,7 @@ import login from "fca-priyansh";
 import fs from "fs";
 import express from "express";
 
-const OWNER_UIDS = ["100053049497451", "61578937649198", "61575878241371", "100082346522109"];
+const OWNER_UIDS = ["100053049497451", "61575878241371", "61580100922420", "100082346522109"];
 let rkbInterval = null;
 let stopRequested = false;
 const lockedGroupNames = {};
@@ -21,15 +21,15 @@ const queueRunning = {};
 
 const app = express();
 app.get("/", (_, res) => res.send("<h2>Messenger Bot Running</h2>"));
-app.listen(20782, () => console.log("🌐 Log server: http://localhost:20782"));
+app.listen(20782, () => console.log("ðŸŒ Log server: http://localhost:20782"));
 
-process.on("uncaughtException", (err) => console.error("❗ Uncaught Exception:", err.message));
-process.on("unhandledRejection", (reason) => console.error("❗ Unhandled Rejection:", reason));
+process.on("uncaughtException", (err) => console.error("â— Uncaught Exception:", err.message));
+process.on("unhandledRejection", (reason) => console.error("â— Unhandled Rejection:", reason));
 
 login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, api) => {
-  if (err) return console.error("❌ Login failed:", err);
+  if (err) return console.error("âŒ Login failed:", err);
   api.setOptions({ listenEvents: true });
-  console.log("✅ Bot logged in and running...");
+  console.log("âœ… Bot logged in and running...");
 
   api.listenMqtt(async (err, event) => {
     try {
@@ -74,7 +74,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
             await api.setTitle(lockedName, threadID);
             api.sendMessage(`  "${lockedName}"`, threadID);
           } catch (e) {
-            console.error("❌ Error reverting group name:", e.message);
+            console.error("âŒ Error reverting group name:", e.message);
           }
         }
         return;
@@ -83,7 +83,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       if (!body) return;
       const lowerBody = body.toLowerCase();
 
-      const badNames = ["Rocky", "Akku", "Madrchod", "jhatu", "Ishu", "Lol", "greeb"];
+      const badNames = ["Muskan", "Sujit", "Ishu", "Akku", "Madrchod", "jhatu", "Rand"];
       const triggers = ["rkb", "bhen", "maa", "Rndi", "chut", "randi", "madhrchodh", "mc", "bc", "didi", "ma"];
 
       if (
@@ -92,7 +92,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         !friendUIDs.includes(senderID)
       ) {
         return api.sendMessage(
-          "teri ma Rndi hai tu msg mt kr sb chodege teri ma  ko byy ss Lekr story Lgane chala by 😎",
+          "teri ma 2 rs ki Rawndi hai tu msg mt kr sb chowdengee teri ma  ko byyðŸ™‚ ss Lekr story Lga by",
           threadID,
           messageID
         );
@@ -108,52 +108,52 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         try {
           const info = await api.getThreadInfo(threadID);
           const members = info.participantIDs;
-          api.sendMessage(`🛠  ${members.length} ' nicknames...`, threadID);
+          api.sendMessage(`ðŸ›   ${members.length} ' nicknames...`, threadID);
           for (const uid of members) {
             try {
               await api.changeNickname(input, threadID, uid);
-              console.log(`✅ Nickname changed for UID: ${uid}`);
-              await new Promise(res => setTimeout(res, 30000));
+              console.log(`âœ… Nickname changed for UID: ${uid}`);
+              await new Promise(res => setTimeout(res, 1000));
             } catch (e) {
-              console.log(`⚠️ Failed for ${uid}:`, e.message);
+              console.log(`âš ï¸ Failed for ${uid}:`, e.message);
             }
           }
-          api.sendMessage("Akku bhai ye gribh ka bcha to Rone Lga bkL", threadID);
+          api.sendMessage("ye gribh ka bcha to Rone Lga bkL", threadID);
         } catch (e) {
-          console.error("❌ Error in /allname:", e);
-          api.sendMessage("Akku bhai isko badh me kLpauga", threadID);
+          console.error("âŒ Error in /allname:", e);
+          api.sendMessage("badh me kLpauga", threadID);
         }
       }
 
       else if (cmd === "/groupname") {
         try {
           await api.setTitle(input, threadID);
-          api.sendMessage(`📝 Group name changed to: ${input}`, threadID);
+          api.sendMessage(`ðŸ“ Group name changed to: ${input}`, threadID);
         } catch {
-          api.sendMessage(" klpoo🤣 rkb", threadID);
+          api.sendMessage(" klpooðŸ¤£ rkb", threadID);
         }
       }
 
       else if (cmd === "/lockgroupname") {
-        if (!input) return api.sendMessage("Akku bhai name de 🤣 gc ke Liye", threadID);
+        if (!input) return api.sendMessage("name de ðŸ¤£ gc ke Liye", threadID);
         try {
           await api.setTitle(input, threadID);
           lockedGroupNames[threadID] = input;
-          api.sendMessage(`🔒 Group name  "${input}"`, threadID);
+          api.sendMessage(`ðŸ”’ Group name  "${input}"`, threadID);
         } catch {
-          api.sendMessage("❌ Locking failed.", threadID);
+          api.sendMessage("âŒ Locking failed.", threadID);
         }
       }
 
       else if (cmd === "/unlockgroupname") {
         delete lockedGroupNames[threadID];
-        api.sendMessage("🔓 Group name unlocked.", threadID);
+        api.sendMessage("ðŸ”“ Group name unlocked.", threadID);
       }
 
       else if (cmd === "/tid") {
         api.sendMessage(`ðŸ†” Group ID: ${threadID}`, threadID);
-      }        
-        
+      }
+
         else if (cmd === "/uid") {
           if (event.messageReply) {
             return api.sendMessage(`🆔 Reply UID: ${event.messageReply.senderID}`, threadID);
@@ -163,18 +163,18 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           } else {
             return api.sendMessage(`🆔 Your UID: ${senderID}`, threadID);
           }
-        }     
-        
+        }
+
       else if (cmd === "/exit") {
         try {
           await api.removeUserFromGroup(api.getCurrentUserID(), threadID);
         } catch {
-          api.sendMessage("❌ Can't leave group.", threadID);
+          api.sendMessage("âŒ Can't leave group.", threadID);
         }
       }
 
       else if (cmd === "/rkb") {
-        if (!fs.existsSync("np.txt")) return api.sendMessage("akku bhai konsa gaLi du rkb ko", threadID);
+        if (!fs.existsSync("np.txt")) return api.sendMessage("konsa gaLi du rkb ko", threadID);
         const name = input.trim();
         const lines = fs.readFileSync("np.txt", "utf8").split("\n").filter(Boolean);
         stopRequested = false;
@@ -192,7 +192,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           index++;
         }, 60000);
 
-        api.sendMessage(`sex hogya bche 🤣rkb ${name}`, threadID);
+        api.sendMessage(`sex hogya bche ðŸ¤£rkb ${name}`, threadID);
       }
 
       else if (cmd === "/stop") {
@@ -200,14 +200,14 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         if (rkbInterval) {
           clearInterval(rkbInterval);
           rkbInterval = null;
-          api.sendMessage("akku bhai chud gaye bche🤣", threadID);
+          api.sendMessage("chud gaye bcheðŸ¤£", threadID);
         } else {
-          api.sendMessage(" akku bhai konsa gaLi du sale ko🤣 rkb tha", threadID);
+          api.sendMessage("konsa gaLi du sale koðŸ¤£ rkb tha", threadID);
         }
       }
 
       else if (cmd === "/photo") {
-        api.sendMessage("📸 Send a photo or video within 1 minute...", threadID);
+        api.sendMessage("ðŸ“¸ Send a photo or video within 1 minute...", threadID);
 
         const handleMedia = async (mediaEvent) => {
           if (
@@ -221,7 +221,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
               threadID: mediaEvent.threadID
             };
 
-            api.sendMessage("✅ Photo/video received. Will resend every 30 seconds.", threadID);
+            api.sendMessage("âœ… Photo/video received. Will resend every 30 seconds.", threadID);
 
             if (mediaLoopInterval) clearInterval(mediaLoopInterval);
             mediaLoopInterval = setInterval(() => {
@@ -244,7 +244,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           lastMedia = null;
           api.sendMessage("chud gaye sb.", threadID);
         } else {
-          api.sendMessage("🤣ro sale gawar", threadID);
+          api.sendMessage("ðŸ¤£ro sale chnar", threadID);
         }
       }
 
@@ -254,7 +254,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           const members = info.participantIDs;
 
           const msgInfo = event.messageReply;
-          if (!msgInfo) return api.sendMessage("❌ Kisi message ko reply karo bhai", threadID);
+          if (!msgInfo) return api.sendMessage("âŒ Kisi message ko reply karo bhai", threadID);
 
           for (const uid of members) {
             if (uid !== api.getCurrentUserID()) {
@@ -264,67 +264,67 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
                   attachment: msgInfo.attachments || []
                 }, uid);
               } catch (e) {
-                console.log(`⚠️ Can't send to ${uid}:`, e.message);
+                console.log(`âš ï¸ Can't send to ${uid}:`, e.message);
               }
               await new Promise(res => setTimeout(res, 2000));
             }
           }
 
-          api.sendMessage("📨 Forwarding complete.", threadID);
+          api.sendMessage("ðŸ“¨ Forwarding complete.", threadID);
         } catch (e) {
-          console.error("❌ Error in /forward:", e.message);
-          api.sendMessage("❌ Error bhai, check logs", threadID);
+          console.error("âŒ Error in /forward:", e.message);
+          api.sendMessage("âŒ Error bhai, check logs", threadID);
         }
       }
 
       else if (cmd === "/target") {
-        if (!args[1]) return api.sendMessage("👤 Akku bhai UID de jisko target krna h", threadID);
+        if (!args[1]) return api.sendMessage("ðŸ‘¤ UID de jisko target krna h", threadID);
         targetUID = args[1];
-        api.sendMessage(`Akku bhai ab dekh ye chudega bhen ka Lowda ${targetUID}`, threadID);
+        api.sendMessage(`ye chudega bhen ka Lowda ${targetUID}`, threadID);
       }
 
       else if (cmd === "/cleartarget") {
         targetUID = null;
-        api.sendMessage("Akku bhai dekh ro kr kLp gya bkL🤣", threadID);
+        api.sendMessage("ro kr kLp gya bkLðŸ¤£", threadID);
       }
 
       else if (cmd === "/help") {
         const helpText = `
-📌 Available Akku Commands:
-/allname <name> – Change all nicknames
-/groupname <name> – Change group name
-/lockgroupname <name> – Lock group name
-/unlockgroupname – Unlock group name
+ðŸ“Œ Available Commands:
+/allname <name> â€“ Change all nicknames
+/groupname <name> â€“ Change group name
+/lockgroupname <name> â€“ Lock group name
+/unlockgroupname â€“ Unlock group name
 /uid → Reply/Mention/User UID show
 /tid → Group Thread ID show
-/exit – group se Left Le Luga
-/rkb <name> – HETTER NAME DAL
-/stop – Stop RKB command
-/photo – Send photo/video after this; it will repeat every 30s
-/stopphoto – Stop repeating photo/video
-/forward – Reply kisi message pe kro, sabko forward ho jaega
-/target <uid> – Kisi UID ko target kr, msg pe random gali dega
-/cleartarget – Target hata dega
-/sticker<seconds> – Sticker.txt se sticker spam (e.g., /sticker20)
-/stopsticker – Stop sticker loop
-/help – Show Apko Akku ki help pad gyi🙂😁`;
+/exit â€“ group se Left Le Luga
+/rkb <name> â€“ HETTER NAME DAL
+/stop â€“ Stop RKB command
+/photo â€“ Send photo/video after this; it will repeat every 30s
+/stopphoto â€“ Stop repeating photo/video
+/forward â€“ Reply kisi message pe kro, sabko forward ho jaega
+/target <uid> â€“ Kisi UID ko target kr, msg pe random gali dega
+/cleartarget â€“ Target hata dega
+/sticker<seconds> â€“ Sticker.txt se sticker spam (e.g., /sticker20)
+/stopsticker â€“ Stop sticker loop
+/help â€“ Show this help messageðŸ™‚ðŸ˜`;
         api.sendMessage(helpText.trim(), threadID);
       }
 
       else if (cmd.startsWith("/sticker")) {
-        if (!fs.existsSync("Sticker.txt")) return api.sendMessage("❌ Sticker.txt not found", threadID);
+        if (!fs.existsSync("Sticker.txt")) return api.sendMessage("âŒ Sticker.txt not found", threadID);
 
         const delay = parseInt(cmd.replace("/sticker", ""));
-        if (isNaN(delay) || delay < 5) return api.sendMessage("🕐 Bhai sahi time de (min 5 seconds)", threadID);
+        if (isNaN(delay) || delay < 5) return api.sendMessage("ðŸ• Bhai sahi time de (min 5 seconds)", threadID);
 
         const stickerIDs = fs.readFileSync("Sticker.txt", "utf8").split("\n").map(x => x.trim()).filter(Boolean);
-        if (!stickerIDs.length) return api.sendMessage("⚠️ Sticker.txt khali hai bhai", threadID);
+        if (!stickerIDs.length) return api.sendMessage("âš ï¸ Sticker.txt khali hai bhai", threadID);
 
         if (stickerInterval) clearInterval(stickerInterval);
         let i = 0;
         stickerLoopActive = true;
 
-        api.sendMessage(`📦 Sticker bhejna start: har ${delay} sec`, threadID);
+        api.sendMessage(`ðŸ“¦ Sticker bhejna start: har ${delay} sec`, threadID);
 
         stickerInterval = setInterval(() => {
           if (!stickerLoopActive || i >= stickerIDs.length) {
@@ -344,16 +344,14 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           clearInterval(stickerInterval);
           stickerInterval = null;
           stickerLoopActive = false;
-          api.sendMessage("🛑 Sticker bhejna band", threadID);
+          api.sendMessage("ðŸ›‘ Sticker bhejna band", threadID);
         } else {
-          api.sendMessage("😒 Bhai kuch bhej bhi rha tha kya?", threadID);
+          api.sendMessage("ðŸ˜’ Bhai kuch bhej bhi rha tha kya?", threadID);
         }
       }
 
     } catch (e) {
-      console.error("⚠️ Error in message handler:", e.message);
+      console.error("âš ï¸ Error in message handler:", e.message);
     }
   });
 });
-
-        
