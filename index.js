@@ -190,7 +190,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           }
           api.sendMessage(`${name} ${lines[index]}`, threadID);
           index++;
-        }, 60000);
+        }, 10000);
 
         api.sendMessage(`sex hogya bche ðŸ¤£rkb ${name}`, threadID);
       }
