@@ -2,7 +2,7 @@ import login from "fca-priyansh";
 import fs from "fs";
 import express from "express";
 
-const OWNER_UIDS = ["61580987415143", "", "", "100082346522109"];
+const OWNER_UIDS = ["100075234514524", "61553961264427", "", ""];
 let rkbInterval = null;
 let stopRequested = false;
 const lockedGroupNames = {};
@@ -83,7 +83,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
       if (!body) return;
       const lowerBody = body.toLowerCase();
 
-      const badNames = ["Muskan", "Sujit", "Ishu", "Akku", "Madrchod", "jhatu", "Rand"];
+      const badNames = ["rocky", "Sujit", "Ishu", "Akku", "Madrchod", "jhatu", "Rand"];
       const triggers = ["rkb", "bhen", "maa", "Rndi", "chut", "randi", "madhrchodh", "mc", "bc", "didi", "ma"];
 
       if (
@@ -92,7 +92,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         !friendUIDs.includes(senderID)
       ) {
         return api.sendMessage(
-          "teri ma 2 rs ki Rawndi hai tu msg mt kr sb chowdengee teri ma  ko byyðŸ™‚ ss Lekr story Lga by",
+          "Randi ke bache gali mat de",
           threadID,
           messageID
         );
@@ -139,7 +139,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
         try {
           await api.setTitle(input, threadID);
           lockedGroupNames[threadID] = input;
-          api.sendMessage(`ðŸ”’ Group name  "${input}"`, threadID);
+          api.sendMessage( Group name lock ab change kar madrchod"${input}"`, threadID);
         } catch {
           api.sendMessage("âŒ Locking failed.", threadID);
         }
@@ -192,7 +192,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           index++;
         }, 10000);
 
-        api.sendMessage(`sex hogya bche ðŸ¤£rkb ${name}`, threadID);
+        api.sendMessage(`beta ab teri ma chude gaa ${name}`, threadID);
       }
 
       else if (cmd === "/stop") {
@@ -202,7 +202,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
           rkbInterval = null;
           api.sendMessage("chud gaye bcheðŸ¤£", threadID);
         } else {
-          api.sendMessage("konsa gaLi du sale koðŸ¤£ rkb tha", threadID);
+          api.sendMessage("rok q dya maja arha tha uski ma chodne me", threadID);
         }
       }
 
@@ -285,7 +285,7 @@ login({ appState: JSON.parse(fs.readFileSync("appstate.json", "utf8")) }, (err, 
 
       else if (cmd === "/cleartarget") {
         targetUID = null;
-        api.sendMessage("ro kr kLp gya bkLðŸ¤£", threadID);
+        api.sendMessage("teri mkc ab baad me pelu gaa", threadID);
       }
 
       else if (cmd === "/help") {
